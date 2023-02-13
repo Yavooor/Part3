@@ -14,7 +14,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Create Cloudformation Stack
+          name: Create Cloudformation Stack 
           command: aws cloudformation create-stack --stack-name myStack --template-body file://../Infras.yml --region us-east-1
 
 workflows:
