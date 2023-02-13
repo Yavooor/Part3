@@ -1,0 +1,24 @@
+version: 2.1
+
+jobs:
+  echo:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: echo "Hey!"
+
+  create_infrastructure: 
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Create Cloudformation Stack
+          command: aws cloudformation create-stack --stack-name myStack --template-body file://Infra.yml --region us-east-1
+
+workflows:
+  main:
+    jobs:
+      - echo
+      - create_infrastructure
