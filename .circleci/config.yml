@@ -21,18 +21,18 @@ jobs:
 
 
   config_infrastructure: 
-     docker:
-    - image: python:3.7-alpine3.11
-  steps:
-    - checkout
-    - add_ssh_keys:
-            fingerprints: ["44:7f:e5:12:eb:1b:8f:7f:7d:fa:0e:d0:3b:96:7a:a6"] 
-    - run:
-        name: Install Ansible
-        command: apk add --update ansible
-    - run:
-        name: Run Playbook and Configure server
-        command: ansible-playbook -i inventory playbook.yml
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+              fingerprints: ["44:7f:e5:12:eb:1b:8f:7f:7d:fa:0e:d0:3b:96:7a:a6"] 
+      - run:
+          name: Install Ansible
+          command: apk add --update ansible
+      - run:
+          name: Run Playbook and Configure server
+          command: ansible-playbook -i inventory playbook.yml
 
 
 workflows:
