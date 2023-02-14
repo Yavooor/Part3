@@ -40,6 +40,6 @@ workflows:
     jobs:
       - create_infrastructure
       - get_infrastructure
-          needs: create_infrastructure
+          - requires: create_infrastructure
       - config_infrastructure
-          needs: get_infrastructure
+          - requires: get_infrastructure
