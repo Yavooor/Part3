@@ -1,13 +1,6 @@
 version: 2.1
 
 jobs:
-  echo:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - checkout
-      - run: echo "Hey!"
-
   create_infrastructure: 
     docker:
       - image: amazon/aws-cli
@@ -17,8 +10,36 @@ jobs:
           name: Create Cloudformation Stack 
           command: aws cloudformation create-stack --stack-name myStack --template-body file://Infra.yml --region us-east-1
 
+  get_infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Get Infrastructure IPs in Inventory 
+          command: echo "[all]" > inventory ; aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory
+
+
+  config_infrastructure: 
+     docker:
+    - image: python:3.7-alpine3.11
+  steps:
+    - checkout
+    - add_ssh_keys:
+            fingerprints: ["44:7f:e5:12:eb:1b:8f:7f:7d:fa:0e:d0:3b:96:7a:a6"] 
+    - run:
+        name: Install Ansible
+        command: apk add --update ansible
+    - run:
+        name: Run Playbook and Configure server
+        command: ansible-playbook -i inventory playbook.yml
+
+
 workflows:
   main:
     jobs:
-      - echo
       - create_infrastructure
+      - get_infrastructure
+        - Requires: "create_infrastructure"
+      - config_infrastructure
+        - Requires: "get_infrastructure"
