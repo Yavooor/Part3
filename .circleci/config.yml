@@ -14,6 +14,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: remove old ones
+          command: destroy_old_envs
+      - run:
           name: Create Cloudformation Stack 
           command: aws cloudformation create-stack --stack-name myStack1 --template-body file://Infra.yml --region us-east-1
 
@@ -43,10 +46,7 @@ jobs:
 workflows:
   main:
     jobs:
-      - destroy_old_envs
       - create_infrastructure:
-          requires:
-              - destroy_old_envs
       - get_infrastructure:
           requires: 
               - create_infrastructure
