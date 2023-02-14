@@ -1,33 +1,6 @@
 version: 2.1
 
-commands:
-  destroy_old_envs:
-    steps:
-      - run:
-          name: Remove any old stack with the same name
-          command: aws cloudformation delete-stack --stack-name myStack1 --region us-east-1
-
 jobs:
-  create_infrastructure: 
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run: aws cloudformation delete-stack --stack-name myStack1 --region us-east-1
-      - run:
-          name: Create Cloudformation Stack 
-          command: aws cloudformation create-stack --stack-name myStack1 --template-body file://Infra.yml --region us-east-1
-
-  get_infrastructure:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Get Infrastructure IPs in Inventory 
-          command: echo "[all]" > inventory ; aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory
-
-
   config_infrastructure: 
     docker:
       - image: python:3.7-alpine3.11
@@ -44,10 +17,4 @@ jobs:
 workflows:
   main:
     jobs:
-      - create_infrastructure
-      - get_infrastructure:
-          requires: 
-              - create_infrastructure
       - config_infrastructure:
-          requires: 
-              - get_infrastructure
