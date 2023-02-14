@@ -40,8 +40,8 @@ workflows:
     jobs:
       - create_infrastructure
       - get_infrastructure:
-          - requires: 
+          requires: 
               - create_infrastructure
       - config_infrastructure:
-          - requires: 
+          requires: 
               - get_infrastructure
