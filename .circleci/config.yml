@@ -13,7 +13,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run: destroy_old_envs
+      - run: aws cloudformation delete-stack --stack-name myStack1 --region us-east-1
       - run:
           name: Create Cloudformation Stack 
           command: aws cloudformation create-stack --stack-name myStack1 --template-body file://Infra.yml --region us-east-1
