@@ -1,20 +1,37 @@
 version: 2.1
 
+commands:
+   destroy_environment:
+     steps:
+       - run:
+           name: Destroy environment
+           
+           when: on_fail
+           command: |
+             aws cloudformation delete-stack --stack-name myStack
+
 jobs:
-  config_infrastructure: 
+  create_infrastructure: 
     docker:
-      - image: python:3.7-alpine3.11
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
-          name: Install Ansible
-          command: apk add --update ansible
+          name: Create Cloudformation Stack 
+          command: aws cloudformation create-stack --stack-name myStack --template-body file://Infra.yml --region us-east-1
+
+  smoke_test:
+    docker:
+      - image: alpine:latest
+    steps:
       - run:
-          name: Run Playbook and Configure server
-          command: ansible-playbook -i inventory playbook.yml --private-key MyKey.pem
- 
+          name: Test job
+          command:  return 1
+      - destroy_environment  
+
 
 workflows:
   main:
     jobs:
-      - config_infrastructure:
+      - create_infrastructure
+      - smoke_test
