@@ -39,9 +39,9 @@ workflows:
   main:
     jobs:
       - create_infrastructure
-      - get_infrastructure
+      - get_infrastructure:
           - requires: 
               - create_infrastructure
-      - config_infrastructure
+      - config_infrastructure:
           - requires: 
               - get_infrastructure
