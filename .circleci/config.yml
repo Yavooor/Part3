@@ -26,13 +26,13 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-              fingerprints: ["44:7f:e5:12:eb:1b:8f:7f:7d:fa:0e:d0:3b:96:7a:a6"] 
+              fingerprints: ["66:73:15:e4:c7:eb:60:9f:a2:34:c8:2a:6d:b7:e4:b6"] 
       - run:
           name: Install Ansible
           command: apk add --update ansible
       - run:
           name: Run Playbook and Configure server
-          command: ansible-playbook -i inventory playbook.yml
+          command: ansible-playbook -i inventory playbook.yml 
  
 
 workflows:
