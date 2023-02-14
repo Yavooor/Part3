@@ -46,7 +46,7 @@ jobs:
 workflows:
   main:
     jobs:
-      - create_infrastructure:
+      - create_infrastructure
       - get_infrastructure:
           requires: 
               - create_infrastructure
