@@ -34,4 +34,5 @@ workflows:
   main:
     jobs:
       - create_infrastructure
-      - smoke_test 
+      - smoke_test:
+          requires: create-infrastructure
